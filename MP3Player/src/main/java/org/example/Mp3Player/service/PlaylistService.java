@@ -17,7 +17,7 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
 
-    @Autowired
+    @Autowired  
     public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository) {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
@@ -49,4 +49,16 @@ public class PlaylistService {
         Optional<Playlist> playlistOptional = playlistRepository.findById(playlistId);
         return playlistOptional.map(Playlist::getSongs).orElse(null);
     }
+
+    public void deletePlaylistById(Long id) {
+        playlistRepository.deleteById(id);
+    }
+
+    public void deletePlaylistByName(String name) {
+        Playlist playlist = playlistRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + name));
+        playlistRepository.delete(playlist);
+    }
+
+
 }
