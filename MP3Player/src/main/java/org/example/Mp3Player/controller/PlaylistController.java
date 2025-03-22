@@ -19,6 +19,28 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/playlists")
 public class PlaylistController {
 
+
+    @PostMapping("/{playlistId}/add-song/{songId}")
+    public Playlist addSongToPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+        return playlistService.addSongToPlaylist(playlistId, songId);
+    }
+
+    @PostMapping("/{playlistId}/remove-song/{songId}")
+    public Playlist removeSongFromPlaylist(@PathVariable Long playlistId, @PathVariable Long songId) {
+        return playlistService.removeSongFromPlaylist(playlistId, songId);
+    }
+
+
+    @GetMapping("/ByName/{name}")
+    public Playlist getPlaylistByName(@PathVariable String name) {
+        return playlistService.getPlaylistByName(name);
+    }
+
+    @GetMapping("/{id}")
+    public Playlist getPlaylistById(@PathVariable Long id) {
+        return playlistService.getPlaylistById(id);
+    }
+
     @Autowired
     private PlaylistService playlistService;
 

@@ -17,10 +17,39 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
 
+    public Playlist addSongToPlaylist(Long playlistId, Long songId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + playlistId));
+        Song song = songRepository.findById(songId)
+                .orElseThrow(() -> new RuntimeException("Песня не найдена: " + songId));
+
+        playlist.getSongs().add(song);
+        return playlistRepository.save(playlist);
+    }
+
+    public Playlist removeSongFromPlaylist(Long playlistId, Long songId) {
+        Playlist playlist = playlistRepository.findById(playlistId)
+                .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + playlistId));
+        Song song = songRepository.findById(songId)
+                .orElseThrow(() -> new RuntimeException("Песня не найдена: " + songId));
+
+        playlist.getSongs().remove(song);
+        return playlistRepository.save(playlist);
+    }
+
     @Autowired  
     public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository) {
         this.playlistRepository = playlistRepository;
         this.songRepository = songRepository;
+    }
+    public Playlist getPlaylistByName(String name) {
+        return playlistRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + name));
+    }
+
+    public Playlist getPlaylistById(Long id) {
+        return playlistRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + id));
     }
 
     public List<Playlist> getAllPlaylists() {
@@ -33,17 +62,7 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
-    public void addSongToPlaylist(Long playlistId, Long songId) {
-        Optional<Playlist> playlistOptional = playlistRepository.findById(playlistId);
-        Optional<Song> songOptional = songRepository.findById(songId);
 
-        if (playlistOptional.isPresent() && songOptional.isPresent()) {
-            Playlist playlist = playlistOptional.get();
-            Song song = songOptional.get();
-            playlist.getSongs().add(song);
-            playlistRepository.save(playlist);
-        }
-    }
 
     public Set<Song> getSongsInPlaylist(Long playlistId) {
         Optional<Playlist> playlistOptional = playlistRepository.findById(playlistId);
