@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 li.setAttribute("data-id", song.id); // Добавляем атрибут data-id
                 li.setAttribute("data-title", song.title); // Добавляем атрибут data-title
                 li.addEventListener("click", () => playSong(song.filePath));
-
+                console.log("Песни:", song);
                 deleteByIdButton = addButtonDelById(song);
 
                deleteByTitleButton = addButtonDelByName(song);
@@ -53,12 +53,11 @@ document.getElementById("add-song-form").addEventListener("submit", function (ev
         .then(song => {
             // Добавляем новый трек в список
             const li = document.createElement("li");
-            li.textContent = `${newSong.title} - ${newSong.artist}`;
-            song.filePath = newSong.filePath;
-            li.addEventListener("click", () => playSong(newSong.filePath));
-            deleteByIdButton = addButtonDelById(newSong);
-
-            deleteByTitleButton = addButtonDelByName(newSong);
+            li.textContent = `${song.title} - ${song.artist}`;
+            li.addEventListener("click", () => playSong(song.filePath));
+            deleteByIdButton = addButtonDelById(song);
+            console.log("Песня созданна:", song);
+            deleteByTitleButton = addButtonDelByName(song);
 
             // Добавляем кнопки в элемент списка
             li.appendChild(deleteByIdButton);
@@ -141,3 +140,184 @@ function addButtonDelByName(song){
     });
     return deleteByTitleButton
 }
+
+
+function addSongToPlaylist() {
+    const playlistId = document.getElementById("manage-playlist-id").value;
+    const songId = document.getElementById("manage-song-id").value;
+
+    if (!playlistId || !songId) {
+        alert("Введите ID плейлиста и ID песни!");
+        return;
+    }
+
+    fetch(`/api/playlists/${playlistId}/add-song/${songId}`, {
+        method: "POST"
+    })
+        .then(response => response.json())
+        .then(playlist => {
+            console.log("Песня добавлена в плейлист:", playlist);
+        })
+        .catch(error => console.error("Ошибка при добавлении песни:", error));
+}
+
+function removeSongFromPlaylist() {
+    const playlistId = document.getElementById("playlist-id").value;
+    const songId = document.getElementById("song-id").value;
+
+    if (!playlistId || !songId) {
+        alert("Введите ID плейлиста и ID песни!");
+        return;
+    }
+
+    fetch(`/api/playlists/${playlistId}/remove-song/${songId}`, {
+        method: "POST"
+    })
+        .then(response => response.json())
+        .then(playlist => {
+            console.log("Песня удалена из плейлиста:", playlist);
+        })
+        .catch(error => console.error("Ошибка при удалении песни:", error));
+}
+
+
+function loadPlaylistById() {
+    const id = document.getElementById("playlist-id").value;
+    if (!id) {
+        alert("Введите ID плейлиста!");
+        return;
+    }
+
+    fetch(`/api/playlists/${id}`)
+        .then(response => response.json())
+        .then(playlist => {
+            displayPlaylist(playlist);
+        })
+        .catch(error => console.error("Ошибка загрузки плейлиста:", error));
+}
+
+function loadPlaylistByName() {
+    const name = document.getElementById("playlist-name_finder").value;
+    console.log(document.getElementById("playlist-name_finder"));
+    if (!name) {
+        alert("Введите название плейлиста!");
+        return;
+    }
+
+    fetch(`/api/playlists/ByName/${encodeURIComponent(name)}`)
+        .then(response => response.json())
+        .then(playlist => {
+            displayPlaylist(playlist);
+        })
+        .catch(error => console.error("Ошибка загрузки плейлиста:", error));
+}
+
+function displayPlaylist(playlist) {
+    const playlistTracks = document.getElementById("playlist-tracks");
+    playlistTracks.innerHTML = ""; // Очищаем список
+
+    if (playlist.songs && playlist.songs.length > 0) {
+        playlist.songs.forEach(song => {
+            const li = document.createElement("li");
+            li.textContent = `${song.title} - ${song.artist}`;
+            playlistTracks.appendChild(li);
+        });
+    } else {
+        const li = document.createElement("li");
+        li.textContent = "В плейлисте нет треков.";
+        playlistTracks.appendChild(li);
+    }
+}
+
+function createPlaylist() {
+    const name = document.getElementById("playlist-name").value;
+    if (!name) {
+        alert("Введите название плейлиста!");
+        return;
+    }
+
+    fetch("/api/playlists", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `name=${encodeURIComponent(name)}`
+    })
+        .then(response => response.json())
+        .then(playlist => {
+            console.log("Плейлист создан:", playlist);
+            loadPlaylists(); // Обновляем список плейлистов
+        })
+        .catch(error => console.error("Ошибка при создании плейлиста:", error));
+}
+
+function deletePlaylistById(id) {
+    fetch(`/api/playlists/${id}`, {
+        method: "DELETE"
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("Плейлист удалён по ID:", id);
+                loadPlaylists(); // Обновляем список плейлистов
+            } else {
+                console.error("Ошибка при удалении плейлиста по ID:", id);
+            }
+        })
+        .catch(error => console.error("Ошибка:", error));
+}
+
+function deletePlaylistByName(name) {
+    fetch(`/api/playlists/by-name/${encodeURIComponent(name)}`, {
+        method: "DELETE"
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log("Плейлист удалён по названию:", name);
+                loadPlaylists(); // Обновляем список плейлистов
+            } else {
+                console.error("Ошибка при удалении плейлиста по названию:", name);
+            }
+        })
+        .catch(error => console.error("Ошибка:", error));
+}
+
+function loadPlaylists() {
+    fetch("/api/playlists")
+        .then(response => response.json())
+        .then(playlists => {
+            const playlistList = document.getElementById("playlist-list");
+            playlistList.innerHTML = ""; // Очищаем список
+
+            playlists.forEach(playlist => {
+                const li = document.createElement("li");
+                li.textContent = `${playlist.name}`;
+
+                // Кнопка удаления по ID
+                const deleteByIdButton = document.createElement("button");
+                deleteByIdButton.textContent = "Удалить по ID";
+                deleteByIdButton.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    deletePlaylistById(playlist.id);
+                });
+
+                // Кнопка удаления по названию
+                const deleteByNameButton = document.createElement("button");
+                deleteByNameButton.textContent = "Удалить по названию";
+                deleteByNameButton.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    deletePlaylistByName(playlist.name);
+                });
+
+                // Добавляем кнопки в элемент списка
+                li.appendChild(deleteByIdButton);
+                li.appendChild(deleteByNameButton);
+
+                // Добавляем элемент списка в DOM
+                playlistList.appendChild(li);
+            });
+        })
+        .catch(error => console.error("Ошибка загрузки плейлистов:", error));
+}
+
+// Загружаем плейлисты при загрузке страницы
+document.addEventListener("DOMContentLoaded", loadPlaylists);
