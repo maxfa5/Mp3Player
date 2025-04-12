@@ -1,5 +1,6 @@
 import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
     java
     id("org.springframework.boot") version "3.4.3"   // Centralized version
@@ -47,6 +48,10 @@ dependencies {
 }
 
 
+
+tasks.named<BootRun>("bootRun") {
+    standardInput = System.`in`
+}
 tasks.test {
     useJUnitPlatform()
 }

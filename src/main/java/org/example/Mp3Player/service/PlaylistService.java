@@ -21,41 +21,6 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final SongRepository songRepository;
 
-    private Playlist currentPlaylist;
-    private int currentTrackIndex = -1;
-
-    public  void  setCurrentPlaylist(Playlist playlist) {
-        this.currentPlaylist = playlist;
-        this.currentTrackIndex = 0; // Начинаем с первого трека
-    }
-
-    public Song getCurrentTrack() {
-        if (currentPlaylist == null || currentPlaylist.isEmpty()) {
-            return null;
-        }
-        return currentPlaylist.get(currentTrackIndex);
-    }
-
-    public Song nextTrack() {
-        if (currentPlaylist == null || currentPlaylist.isEmpty()) {
-            return null;
-        }
-        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.size(); // Переход к следующему треку
-        return getCurrentTrack();
-    }
-
-    public Song previousTrack() {
-        if (currentPlaylist == null || currentPlaylist.isEmpty()) {
-            return null;
-        }
-        currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.size()) % currentPlaylist.size(); // Переход к предыдущему треку
-        return getCurrentTrack();
-    }
-
-    public Playlist getCurrentPlaylist() {
-        return currentPlaylist;
-    }
-
     public Playlist addSongToPlaylist(Long playlistId, Long songId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + playlistId));
@@ -87,7 +52,7 @@ public class PlaylistService {
     }
 
     @Transactional
-    public Playlist getPlaylistWithSongs(Long id) {
+    public Playlist getPlaylistWithSongs(Long id)throws RuntimeException {
         Playlist playlist = playlistRepository.findByIdWithSongs(id)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + id));
 
@@ -122,8 +87,6 @@ public class PlaylistService {
         playlist.setName(name);
         return playlistRepository.save(playlist);
     }
-
-
 
     public Set<Song> getSongsInPlaylist(Long playlistId) {
         Optional<Playlist> playlistOptional = playlistRepository.findById(playlistId);

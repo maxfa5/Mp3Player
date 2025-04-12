@@ -25,9 +25,13 @@ public class WebController {
 
     @GetMapping("/song{id}")
     @ResponseBody
-    public Optional<Song> getSongById(@PathVariable String id) {
+    public ResponseEntity<Song> getSongById(@PathVariable String id) {
         System.out.println( "Получена песня №" +id);
-        return  mp3PlayerService.findById(Long.valueOf(id));
+        try {
+            return new ResponseEntity<>(mp3PlayerService.findById(Long.valueOf(id)), HttpStatus.OK);
+        }catch (RuntimeException e) {
+            return new ResponseEntity<>(mp3PlayerService.findById(Long.valueOf(id)), HttpStatus.BAD_REQUEST);
+        }
     }
 
     private final Mp3PlayerService mp3PlayerService;
@@ -43,11 +47,9 @@ public class WebController {
         System.out.println("Добавленна песня:" + song.toString());
         Optional<Song> savedSong = mp3PlayerService.addSong(song);
 
-        if (savedSong.isPresent()) {
-            return new ResponseEntity<>(savedSong.get(), HttpStatus.CREATED); // Return 201 with the saved song
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Return 500 if saving failed
-        }
+        // Return 201 with the saved song
+        // Return 500 if saving failed
+        return savedSong.map(value -> new ResponseEntity<>(value, HttpStatus.CREATED)).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
             @DeleteMapping("/{id}")

@@ -1,4 +1,9 @@
+# psql -h localhost -p 5433 -U myuser -d Mp3_db
+# SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema';
+
 services:
+
+
 #  app:
 #    build: .
 #    image: mp3Player
@@ -15,7 +20,7 @@ services:
 #      - network
   db:
     image: postgres:latest
-    container_name: db_for_mp3Player
+    container_name: Mp3_db
     environment:
       POSTGRES_DB: Mp3_db
       POSTGRES_USER: myuser

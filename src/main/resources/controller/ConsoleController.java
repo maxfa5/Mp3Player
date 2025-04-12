@@ -47,7 +47,7 @@ public class ConsoleController {
                     System.out.println("Плейлист загружен.");
                     break;
                 case 2:
-                    Song currentSong = playlistService.getCurrentTrack();
+                    Song currentSong = Mp3PlayerService.getCurrentTrack();
                     if (currentSong != null) {
                         mp3PlayerService.play(currentSong.getFilePath());
                     } else {
@@ -55,7 +55,7 @@ public class ConsoleController {
                     }
                     break;
                 case 3:
-                    Song nextSong = playlistService.nextTrack();
+                    Song nextSong = Mp3PlayerService.nextTrack();
                     if (nextSong != null) {
                         System.out.println("Переключение на следующий трек: " + nextSong.getTitle());
                         mp3PlayerService.play(nextSong.getFilePath());
@@ -64,7 +64,7 @@ public class ConsoleController {
                     }
                     break;
                 case 4:
-                    Song previousSong = playlistService.previousTrack();
+                    Song previousSong = Mp3PlayerService.previousTrack();
                     if (previousSong != null) {
                         System.out.println("Переключение на предыдущий трек: " + previousSong.getTitle());
                         mp3PlayerService.play(previousSong.getFilePath());
