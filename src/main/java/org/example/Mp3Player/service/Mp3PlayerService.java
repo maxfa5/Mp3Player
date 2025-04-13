@@ -97,6 +97,29 @@ public class Mp3PlayerService {
             player.close();
         }
     }
+
+    public void printMenu() {
+        if (isPlaying()){
+            System.out.print( "Сейчас играет:" + getCurrentTrack().toString());}
+        System.out.println("Выберите действие:");
+        System.out.println("1. Загрузить плейлист");
+        System.out.println("2. Воспроизвести текущий трек");
+        System.out.println("3. Следующий трек :");
+        System.out.println("4. Предыдущий трек");
+        System.out.println("5. Остановить проигрывание");
+        System.out.println("6. Найти песню по названию");
+        System.out.println("7. Добавить песню в плейлист");
+        System.out.println("8. Загрузить песню");
+        System.out.println("9. Добавить плейлист");
+        System.out.println("10. Просмотреть плейлист");
+        System.out.println("11. Просмотреть все треки");
+        System.out.println("12. Удалить трек");
+        System.out.println("13. Удалить плейлист");
+        System.out.println("14. Показать все плейлисты");
+        System.out.println("6. Выйти");
+
+        System.out.println("99. Выйти");
+    }
 //
 //    private Process aplayProcess;
 //

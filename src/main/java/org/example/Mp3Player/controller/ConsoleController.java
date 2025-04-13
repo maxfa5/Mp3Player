@@ -11,14 +11,12 @@ import org.example.Mp3Player.service.SongsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 
 @Controller
-public class ConsoleController {
+public class ConsoleController {    private final Scanner scanner;
+
 
     private final ExitApplication exitApplication;
     private final PlaylistService playlistService;
@@ -31,31 +29,13 @@ public class ConsoleController {
         this.mp3PlayerService = mp3PlayerService;
         this.exitApplication = exitApplication;
         this.songsService = songsService;
+        this.scanner = new Scanner(System.in);
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            if (mp3PlayerService.isPlaying()){
-            System.out.print( "Сейчас играет:" +  mp3PlayerService.getCurrentTrack().toString());}
-            System.out.println("Выберите действие:");
-            System.out.println("1. Загрузить плейлист");
-            System.out.println("2. Воспроизвести текущий трек");
-            System.out.println("3. Следующий трек :");
-            System.out.println("4. Предыдущий трек");
-            System.out.println("5. Остановить проигрывание");
-            System.out.println("6. Найти песню по названию");
-            System.out.println("7. Добавить песню в плейлист");
-            System.out.println("8. Загрузить песню");
-            System.out.println("9. Добавить плейлист");
-            System.out.println("10. Просмотреть плейлист");
-            System.out.println("11. Просмотреть все треки");
-            System.out.println("12. Удалить трек");
-            System.out.println("13. Удалить плейлист");
-            System.out.println("14. Показать все плейлисты");
-            System.out.println("6. Выйти");
-
-            System.out.println("99. Выйти");
+            mp3PlayerService.printMenu();
 
             int choice = scanner.nextInt();
             boolean is_change = true;
@@ -67,9 +47,7 @@ public class ConsoleController {
                     Long playlistId;
                     playlistService.printAllPlaylists();
                     System.out.println();
-                    int mode;
-                    System.out.println("Введите способ нахождения плейлиста:\n 0 - по имени\n1 - по ID\n");
-                    mode = scanner.nextInt();
+                    int mode = selectSearchMode("плейлиста");
                     if (mode == 1) {
                         System.out.println("Введите ID плейлиста:");
                         playlistId = scanner.nextLong();
@@ -92,22 +70,9 @@ public class ConsoleController {
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
-                    } else {
-                        System.out.println("Выбран некоректный режим.");
                     }
                     break;
                 }
-//                    System.out.println("Введите ID плейлиста:");
-//                    Long playlistId = scanner.nextLong();
-//                    scanner.nextLine(); // Очистка буфера
-//                    try {
-//                        Playlist playlist = playlistService.getPlaylistWithSongs(playlistId);
-//                        mp3PlayerService.setCurrentPlaylist(playlist);
-//                        System.out.println("Плейлист загружен.");
-//                    }catch (RuntimeException e) {
-//                        System.out.println(e.getMessage());
-//                    }
-//                    break;
                 case 2:
                     Song currentSong = mp3PlayerService.getCurrentTrack();
                     if (currentSong != null) {
@@ -191,14 +156,7 @@ public class ConsoleController {
                 }
                 case 10: {
                     Long playlistId;
-                    int mode;
-                    System.out.println("Введите способ нахождения плейлиста:\n 0 - по имени\n1 - по ID\n");
-                    try {
-                        mode = scanner.nextInt();
-                    } catch (Exception e) {
-                        System.out.println(e.getMessage());
-                        break;
-                    }
+                    int mode = selectSearchMode("плейлиста");
                     if (mode == 1) {
                         System.out.println("Введите ID плейлиста:");
                         playlistId = scanner.nextLong();
@@ -227,8 +185,6 @@ public class ConsoleController {
                         } catch (RuntimeException e) {
                             System.out.println(e.getMessage());
                         }
-                    } else {
-                        System.out.println("Выбран некоректный режим.");
                     }
                     break;
                 }
@@ -236,9 +192,7 @@ public class ConsoleController {
                     songsService.getAllSongs().stream().map(Song::toString).forEach(System.out::println);
                     break;
                 case 12: {
-                    int mode;
-                    System.out.println("Введите способ нахождения трека:\n 0 - по имени\n1 - по ID\n");
-                    mode = scanner.nextInt();
+                    int mode = selectSearchMode("трека");
                     if (mode == 1) {
                         System.out.println("Введите ID трека:");
                         Long songID = scanner.nextLong();
@@ -255,19 +209,15 @@ public class ConsoleController {
                         String songTitle = scanner.nextLine();
                         try {
                             songsService.deleteSongByTitle(songTitle);
-                            System.out.println("Вывод песен закончен.");
+                            System.out.println("Песня удалена успешно.");
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
-                    } else {
-                        System.out.println("Выбран некоректный режим.");
                     }
                     break;
                 }
                 case 13: {
-                    int mode;
-                    System.out.println("Введите способ нахождения плейлиста:\n 0 - по имени\n1 - по ID\n");
-                    mode = scanner.nextInt();
+                    int mode = selectSearchMode("плейлиста");
                     if (mode == 1) {
                         System.out.println("Введите ID плейлиста:");
                         Long songID = scanner.nextLong();
@@ -288,17 +238,25 @@ public class ConsoleController {
                         } catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
-                    } else {
-                        System.out.println("Выбран некоректный режим.");
                     }
-                    break;
-                }
+                    break;}
                 case 14:
                     playlistService.printAllPlaylists();
                     break;
                 default:
                     System.out.println("Неверный выбор!");
             }
+        }
+    }
+
+    private int selectSearchMode(String entityType) {
+        System.out.printf("Введите способ нахождения %s:\n0 - по имени\n1 - по ID\n", entityType);
+        try {
+            return scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Ошибка: введите число 0 или 1");
+            scanner.nextLine(); // Очистка буфера
+            return -1;
         }
     }
 }
