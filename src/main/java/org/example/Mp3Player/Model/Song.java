@@ -14,6 +14,8 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name="song",
+        uniqueConstraints = @UniqueConstraint(columnNames = "title"))
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

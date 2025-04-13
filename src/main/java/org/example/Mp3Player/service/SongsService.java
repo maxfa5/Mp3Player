@@ -2,7 +2,6 @@ package org.example.Mp3Player.service;
 
 import org.example.Mp3Player.Model.Song;
 import org.example.Mp3Player.repository.SongRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -95,18 +94,17 @@ System.out.println(storageLocation);
         songRepository.deleteById(id);
     }
 
-    public void deleteSongByTitle(String title) throws Exception{
-        Song song = songRepository.findByTitle(title);
-        if (song == null) {
-            throw  new RuntimeException("Песня не найдена: " + title);
-        }
+    public void deleteSongByTitle(String title) throws Exception {
+        Optional<Song> songOptional = songRepository.findByTitle(title);
+        Song song = songOptional.orElseThrow(() -> new Exception("Песня не найдена: " + title));
         songRepository.delete(song);
     }
+
     public List<Song> getAllSongs(){
         return songRepository.findAll();
     }
 
-    public Song SongfindByTitle(String title){
+    public Optional<Song> SongfindByTitle(String title){
         return songRepository.findByTitle(title);
     }
     public Song findById(Long id){

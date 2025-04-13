@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class WebController {
 
     @GetMapping("/ByName/{name}")
-    public Song getSongByTitle(@PathVariable String name) {
+    public Optional<Song> getSongByTitle(@PathVariable String name) {
         System.out.println( "Получена песня:" + name);
         return  songsService.SongfindByTitle(name);
     }

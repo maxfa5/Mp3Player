@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 
@@ -22,12 +23,14 @@ public class ConsoleController {
     private final ExitApplication exitApplication;
     private final PlaylistService playlistService;
     private final Mp3PlayerService mp3PlayerService;
+    private final SongsService songsService;
 
     @Autowired
-    public ConsoleController(PlaylistService playlistService, Mp3PlayerService mp3PlayerService, ExitApplication exitApplication) {
+    public ConsoleController(PlaylistService playlistService,SongsService songsService, Mp3PlayerService mp3PlayerService, ExitApplication exitApplication) {
         this.playlistService = playlistService;
         this.mp3PlayerService = mp3PlayerService;
         this.exitApplication = exitApplication;
+        this.songsService = songsService;
     }
 
     public void run() {
@@ -45,8 +48,9 @@ public class ConsoleController {
             System.out.println("7. Добавить песню в плейлист");
             System.out.println("8. Загрузить песню");
             System.out.println("9. Добавить плейлист");
-            System.out.println("10. Открыть плейлист");
-
+            System.out.println("10. Просмотреть плейлист");
+            System.out.println("11. Просмотреть всех треков");
+            System.out.println("12. Удалить трек");
             System.out.println("6. Выйти");
             System.out.println("6. Выйти");
 
@@ -106,10 +110,12 @@ public class ConsoleController {
                     System.out.println("Введите названия песни которую хотите найти");
                     String findName = scanner.nextLine();
                     try {
-                        List<Song> songs= mp3PlayerService.findByName(findName);
-                        for (Song song :songs){
-                            System.out.println(song.toString());
-                        }
+                        Optional<Song> song= songsService.SongfindByTitle(findName);
+                            if (song.isPresent()) {
+                            System.out.println(song.toString());}
+                            else {
+                                System.out.println("Песня не найдена");
+                            }
                     }catch (RuntimeException e) {
                         System.out.println(e.getMessage());
                     }
@@ -151,12 +157,16 @@ public class ConsoleController {
                         System.out.println("Введите ID плейлиста:");
                         playlistId = scanner.nextLong();
                         scanner.nextLine();
-                        Playlist playlist =  playlistService.getPlaylistWithSongs(playlistId);
-                        System.out.println(playlist.toString());
-                        for (Song song : playlist.getSongs()){
-                            System.out.println("\t" + song.toString());
+                        try {
+                            Playlist playlist =  playlistService.getPlaylistWithSongs(playlistId);
+                            System.out.println(playlist.toString());
+                            for (Song song : playlist.getSongs()){
+                                System.out.println("\t" + song.toString());
+                            }
+                            System.out.println("Вывод песен закончен.");
+                        }catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
                         }
-                        System.out.println("Вывод песен закончен.");
                     }else if (mode==0){
                         scanner.nextLine();
                         System.out.println("Введите название плейлиста:");
@@ -169,6 +179,37 @@ public class ConsoleController {
                             }
                             System.out.println("Вывод песен закончен.");
                         }catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }else{
+                        System.out.println("Выбран некоректный режим.");
+                    }
+                    break;}
+                case 11:
+                    songsService.getAllSongs().stream().map(Song::toString).forEach(System.out::println);
+                    break;
+                case 12:{
+                    int mode;
+                    System.out.println("Введите способ нахождения трека:\n 0 - по имени\n1 - по ID\n");
+                    mode = scanner.nextInt();
+                    if (mode==1){
+                        System.out.println("Введите ID трека:");
+                        Long songID = scanner.nextLong();
+                        scanner.nextLine();
+                        try {
+                            songsService.deleteSongById(songID);
+                            System.out.println("Песня удалена успешно!");
+                        }catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                        }
+                        }else if (mode==0){
+                        scanner.nextLine();
+                        System.out.println("Введите название трека:");
+                        String songTitle = scanner.nextLine();
+                        try {
+                            songsService.deleteSongByTitle(songTitle);
+                            System.out.println("Вывод песен закончен.");
+                        }catch (Exception e) {
                             System.out.println(e.getMessage());
                         }
                     }else{
