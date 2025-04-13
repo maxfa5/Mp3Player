@@ -8,7 +8,7 @@ public class SongDTO {
 
     private Long id;
     private String title;
-    private Long artist;
+    private String artist;
     private String filePath;
 
     public SongDTO(Song song) {

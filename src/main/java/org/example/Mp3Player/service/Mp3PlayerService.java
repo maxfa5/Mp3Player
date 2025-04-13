@@ -58,6 +58,10 @@ public class Mp3PlayerService {
         return isPlaying;
     }
 
+    public List<Song> findByName(String name) {
+        return currentPlaylist.getSongByName(name);
+    }
+
 
     public void play(String filePath) {
         stop(); // Остановить текущее воспроизведение

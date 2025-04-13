@@ -8,7 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.example.Mp3Player.DTO.PlaylistDTO;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -42,6 +44,16 @@ public class Playlist {
 
     public int size() {
         return songs.size();
+    }
+
+    public List<Song> getSongByName(String name) {
+        List<Song> result= new ArrayList<Song>();
+        for (Song song : songs) {
+            if (song.getTitle().equals(name)) {
+                result.add(song);
+            }
+        }
+        return result;
     }
 }
 

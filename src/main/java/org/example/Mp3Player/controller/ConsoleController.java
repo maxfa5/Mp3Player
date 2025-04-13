@@ -7,6 +7,7 @@ import org.example.Mp3Player.ExitApplication;
 import org.example.Mp3Player.Model.Song;
 import org.example.Mp3Player.service.Mp3PlayerService;
 import org.example.Mp3Player.service.PlaylistService;
+import org.example.Mp3Player.service.SongsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -32,13 +33,22 @@ public class ConsoleController {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            System.out.print( "Сейчас играет:" +  mp3PlayerService.getCurrentTrack().toString());
             System.out.println("Выберите действие:");
             System.out.println("1. Загрузить плейлист");
             System.out.println("2. Воспроизвести текущий трек");
             System.out.println("3. Следующий трек :");
             System.out.println("4. Предыдущий трек");
             System.out.println("5. Остановить проигрывание");
+
+            System.out.println("6. Найти песню по названию");
+            System.out.println("7. Добавить песню в плейлист");
+            System.out.println("8. Загрузить песню");
+            System.out.println("9. Добавить плейлист");
             System.out.println("6. Выйти");
+            System.out.println("6. Выйти");
+
+            System.out.println("99. Выйти");
 
             int choice = scanner.nextInt();
             boolean is_change = true;
@@ -90,11 +100,47 @@ public class ConsoleController {
                     System.out.println("Остановка текущего трека: " + mp3PlayerService.getCurrentTrack().getTitle());
                     mp3PlayerService.stop();
                     break;
-//                case 6:
-//                    PlaylistService.addSongToPlaylist(,currentSong);
+                case 6:
+                    System.out.println("Введите названия песни которую хотите найти");
+                    String findName = scanner.nextLine();
+                    try {
+                        List<Song> songs= mp3PlayerService.findByName(findName);
+                        for (Song song :songs){
+                            System.out.println(song.toString());
+                        }
+                    }catch (RuntimeException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                case 7:
+                    System.out.println("Введите ID плейлиста:");
+                    playlistId = scanner.nextLong();
+                    scanner.nextLine();
+                    System.out.println("Введите ID песни:");
+                    Long songId = scanner.nextLong();
+                    scanner.nextLine();
+                    playlistService.addSongToPlaylist(playlistId,songId);
+                    break;
+                case 8:
+                    System.out.println("Введите названия песни которую хотите добавить");
+                    String newSongName = scanner.nextLine();
+                    System.out.println("Введите названия Испоплителя новой песни");
+                    String newAuthorName = scanner.nextLine();
+                    try {
+                        SongsService.addSong(newSongName, newAuthorName);
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                }
+                    break;
                 case 9:
+                    System.out.println("Введите название плейлиста:");
+                    String playlistTitle= scanner.nextLine();
+                    playlistService.createPlaylist(playlistTitle);
+                    break;
+                    case 99:
                     System.out.println("Выход из приложения...");
                     exitApplication.exit();
+                    break;
                 default:
                     System.out.println("Неверный выбор!");
             }

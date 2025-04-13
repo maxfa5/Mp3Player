@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.Mp3Player.service.SongsService;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,11 +18,17 @@ public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    public Song(String title, String artist) throws IOException {
 
+        this.title = title;
+        this.artist = artist;
+        filePath = SongsService.createEmptyMp3File(title);
+        filePath = filePath.substring(filePath.lastIndexOf("/")+1);
+    }
     @Column
     private String title;
     @Column
-    private Long artist;
+    private String artist;
     @Column
     private String filePath;
 
