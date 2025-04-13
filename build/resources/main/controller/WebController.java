@@ -3,6 +3,7 @@ package org.example.Mp3Player.controller;
 import org.example.Mp3Player.Model.Song;
 import org.example.Mp3Player.repository.SongRepository;
 import org.example.Mp3Player.service.Mp3PlayerService;
+import org.example.Mp3Player.service.SongsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class WebController {
     @ResponseBody
     public ResponseEntity<Song> addSong(@RequestBody Song song) {
         System.out.println("Добавленна песня:" + song.toString());
-        Optional<Song> savedSong = mp3PlayerService.addSong(song);
+        Optional<Song> savedSong = SongsService.addSong(song);
 
         if (savedSong.isPresent()) {
             return new ResponseEntity<>(savedSong.get(), HttpStatus.CREATED); // Return 201 with the saved song

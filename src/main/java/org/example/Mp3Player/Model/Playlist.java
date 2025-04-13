@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.example.Mp3Player.DTO.PlaylistDTO;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
+@ToString(exclude = "songs")
 @Data
 @Entity
 public class Playlist {

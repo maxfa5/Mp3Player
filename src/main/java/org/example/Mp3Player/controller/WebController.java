@@ -3,6 +3,7 @@ package org.example.Mp3Player.controller;
 import org.example.Mp3Player.Model.Song;
 import org.example.Mp3Player.repository.SongRepository;
 import org.example.Mp3Player.service.Mp3PlayerService;
+import org.example.Mp3Player.service.SongsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class WebController {
     @GetMapping("/ByName/{name}")
     public Song getSongByTitle(@PathVariable String name) {
         System.out.println( "Получена песня:" + name);
-        return  mp3PlayerService.SongfindByTitle(name);
+        return  songsService.SongfindByTitle(name);
     }
 
     @GetMapping("/song{id}")
@@ -28,24 +29,26 @@ public class WebController {
     public ResponseEntity<Song> getSongById(@PathVariable String id) {
         System.out.println( "Получена песня №" +id);
         try {
-            return new ResponseEntity<>(mp3PlayerService.findById(Long.valueOf(id)), HttpStatus.OK);
+            return new ResponseEntity<>(songsService.findById(Long.valueOf(id)), HttpStatus.OK);
         }catch (RuntimeException e) {
-            return new ResponseEntity<>(mp3PlayerService.findById(Long.valueOf(id)), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(songsService.findById(Long.valueOf(id)), HttpStatus.BAD_REQUEST);
         }
     }
 
     private final Mp3PlayerService mp3PlayerService;
+    private final SongsService songsService;
 
     @Autowired
-    public WebController(SongRepository songRepository, Mp3PlayerService mp3PlayerService) {
+    public WebController(SongRepository songRepository, Mp3PlayerService mp3PlayerService, SongsService songsService) {
         this.mp3PlayerService = mp3PlayerService;
+        this.songsService = songsService;
     }
 
     @PostMapping
     @ResponseBody
     public ResponseEntity<Song> addSong(@RequestBody Song song) {
         System.out.println("Добавленна песня:" + song.toString());
-        Optional<Song> savedSong = mp3PlayerService.addSong(song);
+        Optional<Song> savedSong = songsService.addSong(song);
 
         // Return 201 with the saved song
         // Return 500 if saving failed
@@ -54,14 +57,14 @@ public class WebController {
 
             @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSongById(@PathVariable Long id) {
-        mp3PlayerService.deleteSongById(id);
+                songsService.deleteSongById(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/Bytitle/{title}")
     public ResponseEntity<Void> deleteSongByTitle(@PathVariable String title) throws Exception {
 //        try {
-            mp3PlayerService.deleteSongByTitle(title);
+        songsService.deleteSongByTitle(title);
             System.out.println("Song" + title + "was delete");
             return ResponseEntity.ok().build();
 //        }catch (Exception e) {
@@ -130,7 +133,7 @@ public class WebController {
     @GetMapping
     @ResponseBody
     private List<Song> showSongs() {
-        List<Song> songs= mp3PlayerService.getAllSongs();
+        List<Song> songs= songsService.getAllSongs();
         songs.forEach(s -> System.out.println(s.getId() + ". " + s.getTitle()));
         return songs;
     }

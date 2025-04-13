@@ -10,6 +10,8 @@ import org.example.Mp3Player.service.PlaylistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -33,16 +35,19 @@ public class ConsoleController {
             System.out.println("Выберите действие:");
             System.out.println("1. Загрузить плейлист");
             System.out.println("2. Воспроизвести текущий трек");
-            System.out.println("3. Следующий трек");
+            System.out.println("3. Следующий трек :");
             System.out.println("4. Предыдущий трек");
             System.out.println("5. Остановить проигрывание");
             System.out.println("6. Выйти");
 
             int choice = scanner.nextInt();
+            boolean is_change = true;
             scanner.nextLine(); // Очистка буфера
 
             switch (choice) {
                 case 1:
+                    playlistService.printAllPlaylists();
+                    System.out.println();
                     System.out.println("Введите ID плейлиста:");
                     Long playlistId = scanner.nextLong();
                     scanner.nextLine(); // Очистка буфера

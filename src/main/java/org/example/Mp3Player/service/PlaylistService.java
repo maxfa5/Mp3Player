@@ -104,4 +104,12 @@ public class PlaylistService {
     }
 
 
+    public void printAllPlaylists() {
+        List<Playlist> playlists = playlistRepository.findAll();
+        System.out.println("all playlists:");
+        for (int i = 0; i < playlists.size(); i++) {
+            Playlist playlist = playlists.get(i);
+            System.out.println(playlist.toString());
+        }
+    }
 }

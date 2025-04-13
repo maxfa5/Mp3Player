@@ -35,7 +35,7 @@ public class Mp3PlayerService {
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
         }
-        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.size(); // Переход к следующему треку
+        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.size();
         return getCurrentTrack();
     }
 
@@ -47,51 +47,16 @@ public class Mp3PlayerService {
         return getCurrentTrack();
     }
 
-    @Autowired
-    private SongRepository songRepository;
-
-    public Optional<Song> addSong(Song song) {
-        try {
-            Song savedSong = songRepository.save(song);
-            System.out.println("Song saved successfully: " + savedSong);
-            return Optional.of(savedSong);
-        } catch (DataAccessException e) {
-            System.err.println("Error saving song: " + song + ". Error details: " + e.getMessage());
-            return Optional.empty(); // Возвращаем пустой Optional в случае ошибки
-        }
-    }
-
     private Player player;
     private boolean isPlaying = false;
 
-    public Song SongfindByTitle(String title){
-        return songRepository.findByTitle(title);
-    }
-    public Song findById(Long id){
-            return songRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Песня не найдена"));
-    }
-    public List<Song> getAllSongs(){
-        return songRepository.findAll();
-    }
-
-
     public boolean isPlaying() {
+
+        if (isPlaying && player.isComplete()){
+            isPlaying = false;
+        }
         return isPlaying;
     }
-
-    public void deleteSongById(Long id) {
-        songRepository.deleteById(id);
-    }
-
-    public void deleteSongByTitle(String title) throws Exception{
-        Song song = songRepository.findByTitle(title);
-        if (song == null) {
-                throw  new RuntimeException("Песня не найдена: " + title);
-        }
-        songRepository.delete(song);
-    }
-
 
 
     public void play(String filePath) {
@@ -112,6 +77,7 @@ public class Mp3PlayerService {
             new Thread(() -> {
                 try {
                     player.play();
+                    isPlaying = true;
                 } catch (JavaLayerException e) {
                     System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
                 }
@@ -123,6 +89,7 @@ public class Mp3PlayerService {
 
     public void stop() {
         if (player != null) {
+            isPlaying = false;
             player.close();
         }
     }
