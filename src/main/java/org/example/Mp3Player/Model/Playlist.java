@@ -17,6 +17,8 @@ import java.util.Set;
 @ToString(exclude = "songs")
 @Data
 @Entity
+@Table(name = "playlists",
+        uniqueConstraints = @UniqueConstraint(columnNames = "name"))
 public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

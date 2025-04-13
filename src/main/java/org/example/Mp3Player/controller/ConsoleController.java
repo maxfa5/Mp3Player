@@ -33,18 +33,20 @@ public class ConsoleController {
     public void run() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.print( "Сейчас играет:" +  mp3PlayerService.getCurrentTrack().toString());
+            if (mp3PlayerService.isPlaying()){
+            System.out.print( "Сейчас играет:" +  mp3PlayerService.getCurrentTrack().toString());}
             System.out.println("Выберите действие:");
             System.out.println("1. Загрузить плейлист");
             System.out.println("2. Воспроизвести текущий трек");
             System.out.println("3. Следующий трек :");
             System.out.println("4. Предыдущий трек");
             System.out.println("5. Остановить проигрывание");
-
             System.out.println("6. Найти песню по названию");
             System.out.println("7. Добавить песню в плейлист");
             System.out.println("8. Загрузить песню");
             System.out.println("9. Добавить плейлист");
+            System.out.println("10. Открыть плейлист");
+
             System.out.println("6. Выйти");
             System.out.println("6. Выйти");
 
@@ -132,15 +134,47 @@ public class ConsoleController {
                         System.out.println(e.getMessage());
                 }
                     break;
-                case 9:
+                case 9:{
                     System.out.println("Введите название плейлиста:");
                     String playlistTitle= scanner.nextLine();
                     playlistService.createPlaylist(playlistTitle);
-                    break;
-                    case 99:
+                    break;}
+                    case 99:{
                     System.out.println("Выход из приложения...");
                     exitApplication.exit();
-                    break;
+                    break;}
+                case 10:{
+                    int mode;
+                    System.out.println("Введите способ нахождения плейлиста:\n 0 - по имени\n1 - по ID\n");
+                    mode = scanner.nextInt();
+                    if (mode==1){
+                        System.out.println("Введите ID плейлиста:");
+                        playlistId = scanner.nextLong();
+                        scanner.nextLine();
+                        Playlist playlist =  playlistService.getPlaylistWithSongs(playlistId);
+                        System.out.println(playlist.toString());
+                        for (Song song : playlist.getSongs()){
+                            System.out.println("\t" + song.toString());
+                        }
+                        System.out.println("Вывод песен закончен.");
+                    }else if (mode==0){
+                        scanner.nextLine();
+                        System.out.println("Введите название плейлиста:");
+                        String playlistTitle = scanner.nextLine();
+                        try {
+                            Playlist playlist =  playlistService.getPlaylistByName(playlistTitle);
+                            System.out.println(playlist.toString());
+                            for (Song song : playlist.getSongs()){
+                                System.out.println(song.toString());
+                            }
+                            System.out.println("Вывод песен закончен.");
+                        }catch (RuntimeException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }else{
+                        System.out.println("Выбран некоректный режим.");
+                    }
+                    break;}
                 default:
                     System.out.println("Неверный выбор!");
             }
