@@ -15,4 +15,5 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     @Query("SELECT p FROM Playlist p LEFT JOIN FETCH p.songs WHERE p.id = :id")
     Optional<Playlist> findByIdWithSongs(@Param("id") Long id);
 
+    Optional<Playlist> removeById(Long playlistId);
 }

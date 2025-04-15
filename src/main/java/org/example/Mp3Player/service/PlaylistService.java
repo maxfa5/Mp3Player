@@ -41,6 +41,18 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
+    public boolean removeSongFromPlaylistById(Long playlistId, Long songId) {
+        return playlistRepository.findById(playlistId).map(playlist ->{
+            System.out.println(playlist.getName() +playlist.getSongs());
+            boolean removed = playlist.getSongs().removeIf(song -> song.getId().equals(songId));
+            if (removed) {
+                playlistRepository.save(playlist);
+            }else {
+                throw new RuntimeException("Ошибка в удалении песни.");
+            }
+            return removed;
+        } ).orElse(false);
+    }
     @Autowired  
     public PlaylistService(PlaylistRepository playlistRepository, SongRepository songRepository) {
         this.playlistRepository = playlistRepository;

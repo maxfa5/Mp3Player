@@ -126,7 +126,13 @@ public class ConsoleController {    private final Scanner scanner;
                     System.out.println("Введите ID песни:");
                     Long songId = scanner.nextLong();
                     scanner.nextLine();
-                    playlistService.addSongToPlaylist(playlistId, songId);
+                    try {
+                        playlistService.addSongToPlaylist(playlistId, songId);
+                    }catch (RuntimeException e) {
+                        System.out.println(e.getMessage());
+                        break;
+                    }
+                    System.out.println("Песня добавленна успешно!");
                     break;}
                 case 8:
                     System.out.println("Введите названия песни которую хотите добавить");
@@ -240,9 +246,27 @@ public class ConsoleController {    private final Scanner scanner;
                         }
                     }
                     break;}
-                case 14:
+                case 14:{
                     playlistService.printAllPlaylists();
-                    break;
+                    break;}
+                case 15:{
+                    if (mp3PlayerService.getCurrentPlaylist() == null) {
+                        System.out.println("Плейлист не устанновлен.Утсановите текущий плейлист и попробуйте снова");
+                        break;
+                    }
+                    System.out.println("Введите ID трека:");
+                    Long songID = scanner.nextLong();
+                    scanner.nextLine();
+                    try {
+                        if(playlistService.removeSongFromPlaylistById(mp3PlayerService.getCurrentPlaylist().getId(),songID)){
+                        System.out.println("Песня удалена успешно!");}
+                        else{
+                            System.out.println("Ошибка удаления песни из плейлиста!");
+                        }
+                    } catch (RuntimeException e) {
+                        System.out.println(e.getMessage());
+                    }break;}
+
                 default:
                     System.out.println("Неверный выбор!");
             }

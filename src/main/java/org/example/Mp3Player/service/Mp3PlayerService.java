@@ -1,6 +1,7 @@
 package org.example.Mp3Player.service;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import lombok.Data;
 import org.example.Mp3Player.Model.Playlist;
 import org.example.Mp3Player.Model.Song;
 import org.example.Mp3Player.repository.SongRepository;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Data
 public class Mp3PlayerService {
 
     private Playlist currentPlaylist;
@@ -116,6 +118,7 @@ public class Mp3PlayerService {
         System.out.println("12. Удалить трек");
         System.out.println("13. Удалить плейлист");
         System.out.println("14. Показать все плейлисты");
+        System.out.println("15. Удалить трек з плейлиста");
         System.out.println("6. Выйти");
 
         System.out.println("99. Выйти");
