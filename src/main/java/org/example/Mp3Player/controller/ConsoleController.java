@@ -78,19 +78,19 @@ public class ConsoleController {    private final Scanner scanner;
                     if (currentSong != null) {
                         mp3PlayerService.play(currentSong.getFilePath());
                     } else {
-                        System.out.println("Плейлист не загружен или пуст.");
+                        System.out.println("Плейлист не загружен, пуст или песня не выбранна.");
                     }
                     break;
-                case 3:
+                case 3:{
                     Song nextSong = mp3PlayerService.nextTrack();
                     if (nextSong != null) {
                         System.out.println("Переключение на следующий трек: " + nextSong.getTitle());
                         mp3PlayerService.play(nextSong.getFilePath());
-                        System.out.println("Сеёчас играет: " + nextSong.getTitle());
+//                        System.out.println("Сеёчас играет: " + nextSong.getTitle());
                     } else {
                         System.out.println("Плейлист не загружен или пуст.");
                     }
-                    break;
+                    break;}
                 case 4:
                     Song previousSong = mp3PlayerService.previousTrack();
                     if (previousSong != null) {

@@ -34,6 +34,7 @@ public class Mp3PlayerService {
         return currentPlaylist.get(currentTrackIndex);
     }
     public Song nextTrack() {
+        System.out.println(currentPlaylist +" "+ currentPlaylist.getSongs());
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
         }
@@ -65,33 +66,34 @@ public class Mp3PlayerService {
     }
 
 
-    public void play(String filePath) {
-        stop(); // Остановить текущее воспроизведение
+        public void play(String filePath) {
+            stop(); // Остановить текущее воспроизведение
 
-        filePath = "music/" + filePath;
-        File file = new File(filePath);
-        System.out.println("Attempting to play from: " + file.getAbsolutePath());
-        System.out.println("File exists: " + file.exists());
-//        try {
-//            startPlayback(file.getAbsolutePath());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        try {
-            FileInputStream fileInputStream = new FileInputStream(filePath);
-            player = new Player(fileInputStream);
-            new Thread(() -> {
-                try {
-                    player.play();
-                    isPlaying = true;
-                } catch (JavaLayerException e) {
-                    System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
-                }
-            }).start();
-        } catch (FileNotFoundException | JavaLayerException e) {
-            System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
+            filePath = "music/" + filePath;
+            File file = new File(filePath);
+    //        try {
+    //            startPlayback(file.getAbsolutePath());
+    //        } catch (IOException e) {
+    //            e.printStackTrace();
+    //        }
+            try {
+                FileInputStream fileInputStream = new FileInputStream(filePath);
+                player = new Player(fileInputStream);
+                isPlaying = true;
+                new Thread(() -> {
+                    try {
+                        player.play();
+                    } catch (JavaLayerException e) {
+                        System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
+                    }finally {
+                        isPlaying = false;
+                    }
+                }).start();
+
+            } catch (FileNotFoundException | JavaLayerException e) {
+                System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
+            }
         }
-    }
 
     public void stop() {
         if (player != null) {
@@ -105,7 +107,7 @@ public class Mp3PlayerService {
             System.out.print( "Сейчас играет:" + getCurrentTrack().toString());}
         System.out.println("Выберите действие:");
         System.out.println("1. Загрузить плейлист");
-        System.out.println("2. Воспроизвести текущий трек");
+        System.out.println("2. Повторить текущий трек");
         System.out.println("3. Следующий трек :");
         System.out.println("4. Предыдущий трек");
         System.out.println("5. Остановить проигрывание");
