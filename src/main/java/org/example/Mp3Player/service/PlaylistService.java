@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class PlaylistService {
@@ -31,6 +30,9 @@ public class PlaylistService {
         return playlistRepository.save(playlist);
     }
 
+    public Optional<Playlist> findById(Long playlistId){
+        return Optional.ofNullable(playlistRepository.findById(playlistId).orElseThrow(() -> new RuntimeException("Плейлист не найден!")));
+    }
     public Playlist removeSongFromPlaylist(Long playlistId, Long songId) {
         Playlist playlist = playlistRepository.findById(playlistId)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + playlistId));
@@ -50,7 +52,7 @@ public class PlaylistService {
             }else {
                 throw new RuntimeException("Ошибка в удалении песни.");
             }
-            return removed;
+            return true;
         } ).orElse(false);
     }
     @Autowired  

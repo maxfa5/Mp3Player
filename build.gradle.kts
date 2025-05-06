@@ -1,14 +1,15 @@
 import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
     java
-    id("org.springframework.boot") version "3.4.3"   // Centralized version
+    id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.hibernate.orm") version "6.4.4.Final"
 }
 
-val springBootVersion = "3.4.3" // Centralized version
+val springBootVersion = "3.4.3"
 
 group = "org.example"
 version = "1.0-SNAPSHOT"

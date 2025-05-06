@@ -36,10 +36,14 @@ public class ConsoleController {    private final Scanner scanner;
         Scanner scanner = new Scanner(System.in);
         while (true) {
             mp3PlayerService.printMenu();
-
-            int choice = scanner.nextInt();
+            int choice = -1;
+            try {
+                choice = scanner.nextInt();
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             boolean is_change = true;
-            scanner.nextLine(); // Очистка буфера
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -86,7 +90,6 @@ public class ConsoleController {    private final Scanner scanner;
                     if (nextSong != null) {
                         System.out.println("Переключение на следующий трек: " + nextSong.getTitle());
                         mp3PlayerService.play(nextSong.getFilePath());
-//                        System.out.println("Сеёчас играет: " + nextSong.getTitle());
                     } else {
                         System.out.println("Плейлист не загружен или пуст.");
                     }
@@ -101,8 +104,12 @@ public class ConsoleController {    private final Scanner scanner;
                     }
                     break;
                 case 5:
-                    System.out.println("Остановка текущего трека: " + mp3PlayerService.getCurrentTrack().getTitle());
-                    mp3PlayerService.stop();
+                    if(mp3PlayerService.isPlaying()){
+                        System.out.println("Остановка текущего трека: " + mp3PlayerService.getCurrentTrack().getTitle());
+                        mp3PlayerService.stop();
+                    }else {
+                        System.out.println("Трек не запущен!");
+                    }
                     break;
                 case 6:
                     System.out.println("Введите названия песни которую хотите найти");
@@ -178,7 +185,6 @@ public class ConsoleController {    private final Scanner scanner;
                             System.out.println(e.getMessage());
                         }
                     } else if (mode == 0) {
-                        scanner.nextLine();
                         System.out.println("Введите название плейлиста:");
                         String playlistTitle = scanner.nextLine();
                         try {
@@ -204,13 +210,13 @@ public class ConsoleController {    private final Scanner scanner;
                         Long songID = scanner.nextLong();
                         scanner.nextLine();
                         try {
+                            songsService.findById(songID);
                             songsService.deleteSongById(songID);
                             System.out.println("Песня удалена успешно!");
                         } catch (RuntimeException e) {
                             System.out.println(e.getMessage());
                         }
                     } else if (mode == 0) {
-                        scanner.nextLine();
                         System.out.println("Введите название трека:");
                         String songTitle = scanner.nextLine();
                         try {
@@ -229,13 +235,13 @@ public class ConsoleController {    private final Scanner scanner;
                         Long songID = scanner.nextLong();
                         scanner.nextLine();
                         try {
+                            playlistService.findById(songID);
                             playlistService.deletePlaylistById(songID);
                             System.out.println("Плейлист удален успешно!");
                         } catch (RuntimeException e) {
                             System.out.println(e.getMessage());
                         }
                     } else if (mode == 0) {
-                        scanner.nextLine();
                         System.out.println("Введите название плейлиста:");
                         String playlistTitle = scanner.nextLine();
                         try {

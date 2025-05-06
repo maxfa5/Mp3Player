@@ -24,7 +24,7 @@ public class Mp3PlayerService {
 
     public  void  setCurrentPlaylist(Playlist playlist) {
         this.currentPlaylist = playlist;
-        this.currentTrackIndex = 0; // Начинаем с первого трека
+        this.currentTrackIndex = 0;
     }
 
     public Song getCurrentTrack() {
@@ -71,11 +71,6 @@ public class Mp3PlayerService {
 
             filePath = "music/" + filePath;
             File file = new File(filePath);
-    //        try {
-    //            startPlayback(file.getAbsolutePath());
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
             try {
                 FileInputStream fileInputStream = new FileInputStream(filePath);
                 player = new Player(fileInputStream);
@@ -120,32 +115,10 @@ public class Mp3PlayerService {
         System.out.println("12. Удалить трек");
         System.out.println("13. Удалить плейлист");
         System.out.println("14. Показать все плейлисты");
-        System.out.println("15. Удалить трек з плейлиста");
+        System.out.println("15. Удалить трек из плейлиста");
         System.out.println("6. Выйти");
 
         System.out.println("99. Выйти");
     }
-//
-//    private Process aplayProcess;
-//
-//    public void startPlayback(String audioFile) throws IOException {
-//        ProcessBuilder processBuilder = new ProcessBuilder("aplay", audioFile);
-//        aplayProcess = processBuilder.start();
-//    }
-//
-//    public void stopPlayback() throws IOException, InterruptedException {
-//        if (aplayProcess != null && aplayProcess.isAlive()) {
-//            // Attempt a graceful shutdown first (send SIGINT)
-//            aplayProcess.destroy();
-//
-//            // Wait a short time to allow the process to terminate gracefully
-//            boolean terminated = aplayProcess.waitFor(2, java.util.concurrent.TimeUnit.SECONDS);
-//
-//            // If the process still hasn't terminated, force it to terminate
-//            if (!terminated) {
-//                aplayProcess.destroyForcibly();
-//                aplayProcess.waitFor(); // Wait for forced termination
-//            }
-//        }
-//    }
+
 }

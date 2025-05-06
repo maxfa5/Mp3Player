@@ -20,7 +20,6 @@ public class SongsService {
     private static SongRepository songRepository = null;
     private static String storageLocation;
 
-    // Правильный конструктор с внедрением зависимостей
     public SongsService(
             SongRepository songRepository,
             @Value("${file.storage.location}") String storageLocation) {
@@ -45,7 +44,7 @@ public class SongsService {
 
     /**
      * Генерирует уникальный путь к файлу в папке music
-     * @param title исходное название файла (с расширением)
+     * @param title исходное название файла
      * @return уникальный путь вида "music/название_1.mp3"
      */
     public static String genPath(String title) {
