@@ -8,10 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.example.Mp3Player.DTO.PlaylistDTO;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @ToString(exclude = "songs")
@@ -33,11 +30,15 @@ public class Playlist {
             joinColumns = @JoinColumn(name = "playlist_id"), // Столбец для плейлиста
             inverseJoinColumns = @JoinColumn(name = "song_id") // Столбец для песни
     )
-    private Set<Song> songs = new HashSet<>();
+    private Set<Song> songs;
 
 
     public boolean isEmpty() {
         return songs.isEmpty();
+    }
+
+    public Playlist() {
+        this.songs = new LinkedHashSet<>(); // Инициализация в конструкторе
     }
 
     public Song get(int currentTrackIndex) {

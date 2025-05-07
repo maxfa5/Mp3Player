@@ -27,14 +27,17 @@ public class Mp3PlayerService {
         this.currentTrackIndex = 0;
     }
 
+
     public Song getCurrentTrack() {
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
         }
+        System.out.println(currentTrackIndex +"!!!!!");
         return currentPlaylist.get(currentTrackIndex);
     }
     public Song nextTrack() {
-        System.out.println(currentPlaylist +" "+ currentPlaylist.getSongs());
+        System.out.println(currentTrackIndex +"!!!!!");
+
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
         }

@@ -17,7 +17,7 @@ import java.util.Optional;
 @Service
 public class SongsService {
 
-    private static SongRepository songRepository = null;
+    public static SongRepository songRepository = null;
     private static String storageLocation;
 
     public SongsService(
@@ -61,7 +61,7 @@ public class SongsService {
         int number = 1;
         // Проверяем существование файлов и добавляем номер при необходимости
         do {
-            System.out.println(filePath);
+//            System.out.println(filePath);
             filePath = (number == 1)
                     ? Paths.get(storageLocation, title).toString()
                     : Paths.get(storageLocation, baseName + "_" + number + extension).toString();
@@ -73,9 +73,9 @@ public class SongsService {
 
     public static String createEmptyMp3File(String title) throws IOException {
         String filePath = SongsService.genPath(title) + ".mp3";
-        System.out.println(filePath);
+//        System.out.println(filePath);
         Path path = Paths.get(filePath);
-        System.out.println(path);
+//        System.out.println(path);
 try {
     if (!Files.exists(path)) {
         // Создаем пустой файл с MP3-заголовком
@@ -89,6 +89,11 @@ try {
     e.printStackTrace();
 }
         return filePath;
+    }
+
+    public static Song addSong(String song1) throws IOException {
+        Song newSong = new Song(song1,"newAuthor");
+        return addSong(newSong).orElse(null);
     }
 
 

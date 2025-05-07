@@ -25,7 +25,6 @@ public class PlaylistService {
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + playlistId));
         Song song = songRepository.findById(songId)
                 .orElseThrow(() -> new RuntimeException("Песня не найдена: " + songId));
-
         playlist.getSongs().add(song);
         return playlistRepository.save(playlist);
     }
@@ -67,6 +66,7 @@ public class PlaylistService {
 
     @Transactional
     public Playlist getPlaylistWithSongs(Long id)throws RuntimeException {
+
         Playlist playlist = playlistRepository.findByIdWithSongs(id)
                 .orElseThrow(() -> new RuntimeException("Плейлист не найден: " + id));
 

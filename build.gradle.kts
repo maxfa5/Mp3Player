@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.org.junit.experimental.categories.Categories.CategoryFilter.exclude
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
@@ -28,38 +26,29 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-//?
-     implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
+    implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
     implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
-//
+
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("com.h2database:h2")
-//
+
     implementation("javazoom:jlayer:1.0.1")
-//
-    compileOnly("org.projectlombok:lombok:1.18.34") // Check for latest
-    annotationProcessor("org.projectlombok:lombok:1.18.34")  // Check for latest
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.0")  // Используйте актуальную версию JUnit 5
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    compileOnly("org.projectlombok:lombok:1.18.34")
+    annotationProcessor("org.projectlombok:lombok:1.18.34")
+    implementation(platform("org.junit:junit-bom:5.10.0"))
+    implementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    implementation("org.assertj:assertj-core:3.23.1")
 
-    // Mockito 5 (Совместимость с JUnit 5)
-    testImplementation("org.mockito:mockito-core:5.11.0") // Используйте актуальную версию Mockito
-    testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+}
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
-    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
-}
 
 tasks.named<BootRun>("bootRun") {
+
     standardInput = System.`in`
-}
-tasks.test {
-    useJUnitPlatform()
 }

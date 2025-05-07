@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Mp3PlayerServiceTest" tests="7" skipped="0" failures="2" errors="0" timestamp="2025-05-07T13:26:54" hostname="myPc" time="0.671">
+  <properties/>
+  <testcase name="previousTrack_ShouldCycleBackwards()" classname="Mp3PlayerServiceTest" time="0.57"/>
+  <testcase name="stop_ShouldClosePlayer()" classname="Mp3PlayerServiceTest" time="0.006"/>
+  <testcase name="play_ShouldStartNewPlayerThread()" classname="Mp3PlayerServiceTest" time="0.076">
+    <failure message="org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: expected: &lt;true&gt; but was: &lt;false&gt;
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at app//org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at app//org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at app//org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
+	at app//org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:183)
+	at app//Mp3PlayerServiceTest.play_ShouldStartNewPlayerThread(Mp3PlayerServiceTest.java:106)
+	at java.base@17.0.15/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base@17.0.15/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base@17.0.15/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <testcase name="getCurrentTrack_ShouldReturnNullForEmptyPlaylist()" classname="Mp3PlayerServiceTest" time="0.002"/>
+  <testcase name="nextTrack_ShouldCycleThroughTracks()" classname="Mp3PlayerServiceTest" time="0.003"/>
+  <testcase name="setCurrentPlaylist_ShouldSetPlaylistAndResetIndex()" classname="Mp3PlayerServiceTest" time="0.006">
+    <failure message="org.mockito.exceptions.misusing.UnnecessaryStubbingException: &#10;Unnecessary stubbings detected.&#10;Clean &amp; maintainable test code requires zero unnecessary code.&#10;Following stubbings are unnecessary (click to navigate to relevant line of code):&#10;  1. -&gt; at Mp3PlayerServiceTest.setCurrentPlaylist_ShouldSetPlaylistAndResetIndex(Mp3PlayerServiceTest.java:53)&#10;  2. -&gt; at Mp3PlayerServiceTest.setCurrentPlaylist_ShouldSetPlaylistAndResetIndex(Mp3PlayerServiceTest.java:54)&#10;Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class." type="org.mockito.exceptions.misusing.UnnecessaryStubbingException">org.mockito.exceptions.misusing.UnnecessaryStubbingException: 
+Unnecessary stubbings detected.
+Clean &amp; maintainable test code requires zero unnecessary code.
+Following stubbings are unnecessary (click to navigate to relevant line of code):
+  1. -&gt; at Mp3PlayerServiceTest.setCurrentPlaylist_ShouldSetPlaylistAndResetIndex(Mp3PlayerServiceTest.java:53)
+  2. -&gt; at Mp3PlayerServiceTest.setCurrentPlaylist_ShouldSetPlaylistAndResetIndex(Mp3PlayerServiceTest.java:54)
+Please remove unnecessary stubbings or use 'lenient' strictness. More info: javadoc for UnnecessaryStubbingException class.
+	at app//org.mockito.junit.jupiter.MockitoExtension.afterEach(MockitoExtension.java:197)
+	at java.base@17.0.15/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base@17.0.15/java.util.ArrayList.forEach(ArrayList.java:1511)
+</failure>
+  </testcase>
+  <testcase name="findByName_ShouldReturnMatchingSongs()" classname="Mp3PlayerServiceTest" time="0.002"/>
+  <system-out><![CDATA[playlist []
+playlist []
+playlist []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

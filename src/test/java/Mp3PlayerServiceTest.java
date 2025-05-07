@@ -2,13 +2,20 @@ import org.example.Mp3Player.Model.Playlist;
 import org.example.Mp3Player.Model.Song;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import org.example.Mp3Player.repository.PlaylistRepository;
+import org.example.Mp3Player.repository.SongRepository;
 import org.example.Mp3Player.service.Mp3PlayerService;
+import org.example.Mp3Player.service.PlaylistService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.FileInputStream;
@@ -16,111 +23,79 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class) // For Mockito annotations
+@ExtendWith(SpringExtension.class) // For Spring context loading
+@SpringBootTest // Loads the Spring context for testing
 class Mp3PlayerServiceTest {
 
-    @InjectMocks
-    private Mp3PlayerService mp3PlayerService;
+    @Lazy
+    @InjectMocks // Inject mocks into this service
+    private Mp3PlayerService playerService;
+
+    @Mock // Mock the PlaylistService dependency
+    private PlaylistService playlistService;
+
+    @Mock // Mock dependencies of playlistService
+    private PlaylistRepository playlistRepository;
 
     @Mock
-    private Playlist playlist;
+    private SongRepository songRepository;
 
-    @Mock
-    private Player player;
-
-    private final Song song1 = new Song("Song1", "artist1", "album1");
-    private final Song song2 = new Song("Song2", "artist2", "album2");
+    private Playlist testPlaylist;
+    private Song song1, song2, song3;
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(mp3PlayerService, "player", null);
-        ReflectionTestUtils.setField(mp3PlayerService, "isPlaying", false);
+        // Set up your test data
+        song1 = new Song("Song1", "Artist1", "path/to/song1.mp3");
+        song2 = new Song("Song2", "Artist2", "path/to/song2.mp3");
+        song3 = new Song("Song3", "Artist3", "path/to/song3.mp3");
+
+        testPlaylist = new Playlist("Test Playlist");
+        playlistService.addSongToPlaylist(testPlaylist.getId(), song1.getId());
+        playlistService.addSongToPlaylist(testPlaylist.getId(), song2.getId());
+        playlistService.addSongToPlaylist(testPlaylist.getId(), song3.getId());
     }
-//
-//    @Test
-//    void setCurrentPlaylist_ShouldSetPlaylistAndResetIndex() {
-//        when(playlist.size()).thenReturn(2);
-//        when(playlist.isEmpty()).thenReturn(false);
-//
-//        mp3PlayerService.setCurrentPlaylist(playlist);
-//
-//        assertEquals(playlist, mp3PlayerService.getCurrentPlaylist());
-//        assertEquals(0, mp3PlayerService.getCurrentTrackIndex());
-//    }
-//
-//    @Test
-//    void getCurrentTrack_ShouldReturnNullForEmptyPlaylist() {
-//        when(playlist.isEmpty()).thenReturn(true);
-//        mp3PlayerService.setCurrentPlaylist(playlist);
-//
-//        assertNull(mp3PlayerService.getCurrentTrack());
-//    }
-//
-//    @Test
-//    void nextTrack_ShouldCycleThroughTracks() {
-//        when(playlist.size()).thenReturn(2);
-//        when(playlist.isEmpty()).thenReturn(false);
-//        when(playlist.get(0)).thenReturn(song1);
-//        when(playlist.get(1)).thenReturn(song2);
-//
-//        mp3PlayerService.setCurrentPlaylist(playlist);
-//
-//        assertEquals(song2, mp3PlayerService.nextTrack());
-//        assertEquals(song1, mp3PlayerService.nextTrack());
-//    }
-//
-//    @Test
-//    void previousTrack_ShouldCycleBackwards() {
-//        when(playlist.size()).thenReturn(2);
-//        when(playlist.isEmpty()).thenReturn(false);
-//        when(playlist.get(0)).thenReturn(song1);
-//        when(playlist.get(1)).thenReturn(song2);
-//
-//        mp3PlayerService.setCurrentPlaylist(playlist);
-//        mp3PlayerService.nextTrack(); // move to index 1
-//
-//        assertEquals(song1, mp3PlayerService.previousTrack());
-//    }
-//
-//    @Test
-//    void play_ShouldStartNewPlayerThread() throws Exception {
-//        FileInputStream mockStream = mock(FileInputStream.class);
-//        Mp3PlayerService spyService = spy(mp3PlayerService);
-//
-//        doReturn(mockStream).when(spyService).createFileInputStream(anyString());
-//        doReturn(player).when(spyService).createPlayer(mockStream);
-//
-//        spyService.play("test.mp3");
-//
-//        assertTrue(spyService.isPlaying());
-//        verify(player).play();
-//    }
-//
-//    @Test
-//    void stop_ShouldClosePlayer() {
-//        ReflectionTestUtils.setField(mp3PlayerService, "player", player);
-//        ReflectionTestUtils.setField(mp3PlayerService, "isPlaying", true);
-//
-//        mp3PlayerService.stop();
-//
-//        assertFalse(mp3PlayerService.isPlaying());
-//        verify(player).close();
-//    }
 
     @Test
-    void findByName_ShouldReturnMatchingSongs() {
-        List<Song> songs = Arrays.asList(song1, song2);
-        when(playlist.getSongByName("Song1")).thenReturn(Collections.singletonList(song1));
-        mp3PlayerService.setCurrentPlaylist(playlist);
+    void testPlayPlaylist() {
+        // Mock the behavior of PlaylistService if Mp3PlayerService uses it
+        when(playlistService.getPlaylistWithSongs(1L)).thenReturn(testPlaylist);  // Example: If playerService loads playlist by ID
 
-        List<Song> result = mp3PlayerService.findByName("Song1");
+        // Act: Call the method you are testing
+        mp3pla.playPlaylist(1L);
 
-        assertEquals(1, result.size());
-        assertEquals(song1, result.get(0));
+        // Assert: Verify that the expected actions occurred (replace with your actual assertions)
+        // Example: Verify that the correct songs were played in the correct order
+        List<Song> expectedSongs = new ArrayList<>();
+        expectedSongs.add(song1);
+        expectedSongs.add(song2);
+        expectedSongs.add(song3);
+
+        // Assuming playPlaylist actually creates a play order list
+        assertEquals(expectedSongs, playerService.getCurrentlyPlaying()); // Adjust assertion as needed for your service's logic
+
     }
+
+    // Add more test methods for other functionalities of Mp3PlayerService
 }
