@@ -1,7 +1,6 @@
 package org.example.Mp3Player.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.Mp3Player.service.SongsService;
@@ -39,4 +38,14 @@ public class Song {
     @ToString.Exclude // Предотвращает StackOverflowError при генерации toString
     @EqualsAndHashCode.Exclude // Предотвращает StackOverflowError при генерации equals/hashCode
     private Set<Playlist> playlists = new HashSet<>();
+
+    public Song(String song1, String artist1, String filePath) {
+        this.title = song1;
+        this.artist = artist1;
+        this.filePath = filePath;
+    }
+
+    public String getName() {
+        return title;
+    }
 }

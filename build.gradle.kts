@@ -39,16 +39,23 @@ dependencies {
 //
     compileOnly("org.projectlombok:lombok:1.18.34") // Check for latest
     annotationProcessor("org.projectlombok:lombok:1.18.34")  // Check for latest
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.0")  // Используйте актуальную версию JUnit 5
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
+    // Mockito 5 (Совместимость с JUnit 5)
+    testImplementation("org.mockito:mockito-core:5.11.0") // Используйте актуальную версию Mockito
+    testImplementation("org.mockito:mockito-junit-jupiter:5.11.0")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    testImplementation(platform("org.junit:junit-bom:5.10.0")) {
-//        exclude("org.junit.vintage", "junit-vintage-engine")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
 
 tasks.named<BootRun>("bootRun") {
     standardInput = System.`in`

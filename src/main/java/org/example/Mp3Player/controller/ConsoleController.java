@@ -149,7 +149,7 @@ public class ConsoleController {    private final Scanner scanner;
                     try {
                         SongsService.addSong(newSongName, newAuthorName);
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println(e.toString() + "NEN");
                     }
                     break;
                 case 9: {
@@ -278,6 +278,89 @@ public class ConsoleController {    private final Scanner scanner;
             }
         }
     }
+//
+//    @Test
+//    public void test(){
+//        Optional<Song> newSong = null;
+//        try {
+//            newSong = SongsService.addSong("newSongName", "newAuthorName");
+//            assertEquals("newSongName", newSong.get().getName());
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//        Playlist playlsit = null;
+//        try {
+//            playlsit = playlistService.createPlaylist("NewPlaylist");
+//            assertEquals("NewPlaylist", playlsit.getName());
+//
+//        } catch (Exception e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//
+//        try {
+//            Playlist playlist = playlistService.getPlaylistWithSongs(playlsit.getId());
+//            System.out.println(playlist.toString());
+//            for (Song song : playlist.getSongs()) {
+//                System.out.println("\t" + song.toString());
+//            }
+//            System.out.println("Вывод песен закончен.");
+//        } catch (RuntimeException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        try {
+//            Playlist playlist = playlistService.getPlaylistByName("NewPlaylist");
+//            System.out.println(playlist.toString());
+//            for (Song song : playlist.getSongs()) {
+//                System.out.println(song.toString());
+//            }
+//            System.out.println("Вывод песен закончен.");
+//        } catch (RuntimeException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        songsService.getAllSongs().stream().map(Song::toString).forEach(System.out::println);
+//
+//
+//        try {
+//            songsService.findById(newSong.get().getId());
+//            songsService.deleteSongById(newSong.get().getId());
+//            System.out.println("Песня удалена успешно!");
+//        } catch (RuntimeException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//        assertEquals(null,mp3PlayerService.getCurrentTrack());
+//
+//        assertEquals(null, mp3PlayerService.nextTrack());
+//
+//        assertEquals(null, mp3PlayerService.previousTrack());
+//
+//        assertEquals(false, mp3PlayerService.isPlaying());
+//
+//
+//
+//
+//    }
+
+    private boolean assertEquals(Object o, Song currentTrack) {
+        if (o.equals(currentTrack)) {return true;}
+        return false;
+    }
+
+    private boolean assertEquals(String o, String currentTrack) {
+        if (o.equals(currentTrack)) {return true;}
+        return false;
+    }
+
+    private boolean assertEquals(boolean o, boolean currentTrack) {
+        if (o==currentTrack) {return true;}
+        return false;
+    }
+
+
+
 
     private int selectSearchMode(String entityType) {
         System.out.printf("Введите способ нахождения %s:\n0 - по имени\n1 - по ID\n", entityType);
@@ -289,4 +372,8 @@ public class ConsoleController {    private final Scanner scanner;
             return -1;
         }
     }
+
+
+
+
 }

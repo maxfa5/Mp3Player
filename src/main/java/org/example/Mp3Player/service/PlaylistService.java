@@ -76,20 +76,7 @@ public class PlaylistService {
 
     public  PlaylistDTO convertToDto(Playlist playlist) {
         PlaylistDTO dto = new PlaylistDTO(playlist);
-//        dto.setId(playlist.getId());
-//        dto.setName(playlist.getName());
-//
-//        Set<SongDTO> songDTOs = playlist.getSongs().stream()
-//                .map(this::convertToDTO)
-//                .collect(Collectors.toSet());
-//        dto.setSongs(songDTOs);
-//        // Теперь песни должны быть загружены
         return dto;
-    }
-
-
-    public SongDTO convertToDTO(Song song) {
-        return new SongDTO(song);
     }
 
     public List<Playlist> getAllPlaylists() {

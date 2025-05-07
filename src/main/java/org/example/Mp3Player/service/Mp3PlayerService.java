@@ -61,34 +61,38 @@ public class Mp3PlayerService {
         return isPlaying;
     }
 
+    public FileInputStream createFileInputStream(String path) throws FileNotFoundException {
+        return new FileInputStream(path);
+    }
+
+    public Player createPlayer(FileInputStream stream) throws JavaLayerException {
+        return new Player(stream);
+    }
+
     public List<Song> findByName(String name) {
         return currentPlaylist.getSongByName(name);
     }
 
-
-        public void play(String filePath) {
-            stop(); // Остановить текущее воспроизведение
-
-            filePath = "music/" + filePath;
-            File file = new File(filePath);
-            try {
-                FileInputStream fileInputStream = new FileInputStream(filePath);
-                player = new Player(fileInputStream);
-                isPlaying = true;
-                new Thread(() -> {
-                    try {
-                        player.play();
-                    } catch (JavaLayerException e) {
-                        System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
-                    }finally {
-                        isPlaying = false;
-                    }
-                }).start();
-
-            } catch (FileNotFoundException | JavaLayerException e) {
-                System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
-            }
+    public void play(String filePath) {
+        stop();
+        filePath = "music/" + filePath;
+        try {
+            FileInputStream fileInputStream = createFileInputStream(filePath);
+            player = createPlayer(fileInputStream);
+            isPlaying = true;
+            new Thread(() -> {
+                try {
+                    player.play();
+                } catch (JavaLayerException e) {
+                    System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
+                } finally {
+                    isPlaying = false;
+                }
+            }).start();
+        } catch (FileNotFoundException | JavaLayerException e) {
+            System.err.println("Ошибка при воспроизведении файла: " + e.getMessage());
         }
+    }
 
     public void stop() {
         if (player != null) {

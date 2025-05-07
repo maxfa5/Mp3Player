@@ -28,6 +28,7 @@ public class SongsService {
     }
 
     public static Optional<Song> addSong(String newSongName,String newAuthor) throws IOException {
+
     Song newSong = new Song(newSongName,newAuthor);
         return addSong(newSong);
     }
@@ -38,7 +39,7 @@ public class SongsService {
             return Optional.of(savedSong);
         } catch (DataAccessException e) {
             System.err.println("Error saving song: " + song + ". Error details: " + e.getMessage());
-            return Optional.empty(); // Возвращаем пустой Optional в случае ошибки
+            return Optional.empty();
         }
     }
 
@@ -58,7 +59,6 @@ public class SongsService {
 
         String filePath = "";
         int number = 1;
-System.out.println(storageLocation);
         // Проверяем существование файлов и добавляем номер при необходимости
         do {
             System.out.println(filePath);
@@ -75,16 +75,19 @@ System.out.println(storageLocation);
         String filePath = SongsService.genPath(title) + ".mp3";
         System.out.println(filePath);
         Path path = Paths.get(filePath);
-        System.out.println(filePath);
-
-        if (!Files.exists(path)) {
-            // Создаем пустой файл с MP3-заголовком
-            byte[] mp3Header = new byte[] {
-                    0x49, 0x44, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-                    // Это минимальный корректный заголовок MP3 файла
-            };
-            Files.write(path, mp3Header);
-        }
+        System.out.println(path);
+try {
+    if (!Files.exists(path)) {
+        // Создаем пустой файл с MP3-заголовком
+        byte[] mp3Header = new byte[] {
+                0x49, 0x44, 0x33, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+                // Это минимальный корректный заголовок MP3 файла
+        };
+        Files.write(path, mp3Header);
+    }
+}catch (Exception e){
+    e.printStackTrace();
+}
         return filePath;
     }
 
