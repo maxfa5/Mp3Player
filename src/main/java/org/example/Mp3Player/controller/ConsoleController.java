@@ -429,6 +429,7 @@ public class ConsoleController {    private final Scanner scanner;
         BaseCheckForAddAndDel();
         checkMp3Service();
         checkSongService();
+        cleanData();
     }
 void BaseCheckForAddAndDel(){
     Optional<Song> newSong = Optional.empty();

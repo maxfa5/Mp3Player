@@ -35,7 +35,7 @@ public class SongsService {
     public static Optional<Song> addSong(Song song) {
         try {
             Song savedSong = songRepository.save(song);
-            System.out.println("Song saved successfully: " + savedSong);
+            System.out.println("Песня сохранена успешно: " + savedSong);
             return Optional.of(savedSong);
         } catch (DataAccessException e) {
             System.err.println("Error saving song: " + song + ". Error details: " + e.getMessage());

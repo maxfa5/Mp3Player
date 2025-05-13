@@ -32,11 +32,9 @@ public class Mp3PlayerService {
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
         }
-        System.out.println(currentTrackIndex +"!!!!!");
         return currentPlaylist.get(currentTrackIndex);
     }
     public Song nextTrack() {
-        System.out.println(currentTrackIndex +"!!!!!");
 
         if (currentPlaylist == null || currentPlaylist.isEmpty()) {
             return null;
